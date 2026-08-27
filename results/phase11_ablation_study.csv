@@ -1,0 +1,4 @@
+Experiment,N_features,Total Return (%),CAGR (%),Annualized Volatility (%),Sharpe Ratio,Max Drawdown (%),Win Rate (%),Calmar Ratio
+Exp A (Price/Return only),5,53.35,9.81,21.18,0.547,-23.52,52.74,0.417
+Exp B (A + Technical),15,66.73,11.84,20.62,0.645,-19.04,53.52,0.622
+"Exp C (B + Volume, full)",17,100.55,16.46,20.81,0.836,-20.32,53.43,0.81
