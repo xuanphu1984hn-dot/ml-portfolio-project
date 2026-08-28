@@ -4,7 +4,7 @@
 
 > Đồ án học thuật — không phải hệ thống giao dịch tài chính thực tế. Mọi kết quả đều được tính từ dữ liệu lịch sử thực nghiệm, không khuyến nghị sử dụng cho mục đích đầu tư thực tế.
 
-**Demo trực tuyến:** [https://ml-portfolio-project-o6zvjgra9osvs2sauh7jfn.streamlit.app/](https://ml-portfolio-project-o6zvjgra9osvs2sauh7jfn.streamlit.app/)
+**Demo trực tuyến:** https://ml-portfolio-project-o6zvjgra9osvs2sauh7jfn.streamlit.app/
 
 ---
 
@@ -19,13 +19,13 @@ Xây dựng hệ thống sử dụng dữ liệu lịch sử OHLCV của 25 cổ
 
 ## Câu hỏi nghiên cứu
 
-- **RQ1:** Các mô hình ML/DL (Random Forest, XGBoost, LSTM) có dự báo lợi suất tốt hơn baseline hay không?
-- **RQ2:** Nhóm đặc trưng nào (Price/Return, Technical Indicators, Volume) đóng góp nhiều nhất vào chất lượng dự báo và hiệu quả danh mục?
-- **RQ3:** Chiến lược chọn Top-K cổ phiếu dựa trên dự báo mô hình có tạo ra Sharpe Ratio vượt trội so với benchmark hay không?
+* **RQ1:** Các mô hình ML/DL (Random Forest, XGBoost, LSTM) có dự báo lợi suất tốt hơn baseline hay không?
+* **RQ2:** Nhóm đặc trưng nào (Price/Return, Technical Indicators, Volume) đóng góp nhiều nhất vào chất lượng dự báo và hiệu quả danh mục?
+* **RQ3:** Chiến lược chọn Top-K cổ phiếu dựa trên dự báo mô hình có tạo ra Sharpe Ratio vượt trội so với benchmark hay không?
 
 ## Cấu trúc repository
 
-```
+```text
 ml-portfolio-project/
 ├── app.py                      # Streamlit dashboard (4 trang)
 ├── requirements.txt            # Thư viện cần cài đặt
@@ -38,35 +38,37 @@ ml-portfolio-project/
 
 ## Dữ liệu
 
-| Thuộc tính | Giá trị |
-|---|---|
-| Nguồn | Yahoo Finance (`yfinance`) |
-| Tần suất | Daily OHLCV |
-| Phạm vi thời gian | 2000-01-03 → 2026-08-13 |
-| Universe | 25 cổ phiếu large-cap S&P 500 |
+| Thuộc tính         | Giá trị                                                           |
+| ------------------ | ----------------------------------------------------------------- |
+| Nguồn              | Yahoo Finance (`yfinance`)                                        |
+| Tần suất           | Daily OHLCV                                                       |
+| Phạm vi thời gian  | 2000-01-03 → 2026-08-13                                           |
+| Universe           | 25 cổ phiếu large-cap S&P 500                                     |
 | Chất lượng dữ liệu | 100% đầy đủ, 0% thiếu dữ liệu, đồng bộ lịch giao dịch giữa các mã |
 
-Danh sách 25 mã: `AAPL, MSFT, JNJ, PG, KO, XOM, JPM, WMT, HD, DIS, INTC, CSCO, PFE, MRK, VZ, T, IBM, GE, CAT, MMM, MCD, NKE, CVX, UNH, ORCL`
+Danh sách 25 mã:
+
+`AAPL, MSFT, JNJ, PG, KO, XOM, JPM, WMT, HD, DIS, INTC, CSCO, PFE, MRK, VZ, T, IBM, GE, CAT, MMM, MCD, NKE, CVX, UNH, ORCL`
 
 ## Phương pháp
 
 ### Đặc trưng (17 biến, 3 nhóm)
 
-| Nhóm | Số lượng | Mô tả |
-|---|---|---|
-| Price/Return | 5 | Lợi suất 1, 5, 10, 20, 60 ngày |
-| Technical Indicators | 10 | MA(5/10/20/50/200)_ratio, RSI, MACD_pct, MACD_signal_pct, ATR_pct, Volatility 20 ngày |
-| Volume | 2 | Volume change, Volume ratio |
+| Nhóm                 | Số lượng | Mô tả                                                                                 |
+| -------------------- | -------: | ------------------------------------------------------------------------------------- |
+| Price/Return         |        5 | Lợi suất 1, 5, 10, 20, 60 ngày                                                        |
+| Technical Indicators |       10 | MA(5/10/20/50/200)_ratio, RSI, MACD_pct, MACD_signal_pct, ATR_pct, Volatility 20 ngày |
+| Volume               |        2 | Volume change, Volume ratio                                                           |
 
 Toàn bộ đặc trưng dạng giá trị tuyệt đối (MA, MACD, ATR) đã được chuẩn hóa sang dạng **tỷ lệ tương đối** để đảm bảo tính dừng (stationary) khi dữ liệu trải dài 26 năm — chi tiết xem báo cáo, Chương 3.
 
 ### Chia dữ liệu theo thời gian (không random split)
 
-| Tập | Khoảng thời gian | Vai trò |
-|---|---|---|
-| Train | 2000–2017 | Huấn luyện mô hình |
-| Validation | 2018–2021 | Chọn hyperparameter, chọn thiết kế chiến lược |
-| Test | 2022–2026 | Đánh giá cuối cùng, **chỉ sử dụng đúng một lần** |
+| Tập        | Khoảng thời gian | Vai trò                                          |
+| ---------- | ---------------- | ------------------------------------------------ |
+| Train      | 2000–2017        | Huấn luyện mô hình                               |
+| Validation | 2018–2021        | Chọn hyperparameter, chọn thiết kế chiến lược    |
+| Test       | 2022–2026        | Đánh giá cuối cùng, **chỉ sử dụng đúng một lần** |
 
 ### Mô hình
 
@@ -74,7 +76,7 @@ Linear Regression (baseline có học) · Random Forest · XGBoost · LSTM — t
 
 ### Pipeline Prediction → Portfolio
 
-```
+```text
 OHLCV + 17 Features (tại thời điểm T)
         ↓
    Mô hình (hồi quy)
@@ -94,56 +96,79 @@ Portfolio Weighting (Equal Weight / Volatility Weight)
 
 ## Kết quả chính (Test set, 2022–2026)
 
-| Chiến lược | Sharpe Ratio | Total Return | CAGR | Annualized Volatility | Max Drawdown | Win Rate | Calmar Ratio |
-|---|---|---|---|---|---|---|---|
-| **Buy & Hold** | **1.068** | 87.88% | 14.81% | 13.82% | -18.92% | 54.56% | 0.782 |
-| Equal Weight | 1.026 | 82.80% | 14.12% | 13.80% | -19.92% | 53.69% | 0.709 |
-| XGBoost (Top-5, Equal Weight) | 0.836 | 100.55% | 16.46% | 20.81% | -20.32% | 53.43% | 0.810 |
-| LSTM | 0.759 | 90.73% | 15.18% | 21.72% | -20.31% | 51.00% | 0.748 |
-| Random Forest | 0.734 | 83.50% | 14.21% | 21.16% | -20.85% | 52.56% | 0.682 |
-| Linear Regression | 0.714 | 82.42% | 14.07% | 21.70% | -21.21% | 53.00% | 0.663 |
-| Proposed Strategy (Top-5, Volatility Weight) | 0.488 | 41.86% | 7.96% | 19.63% | -26.14% | 53.61% | 0.304 |
+| Chiến lược                                   | Sharpe Ratio | Total Return |       CAGR | Annualized Volatility | Max Drawdown | Win Rate | Calmar Ratio |
+| -------------------------------------------- | -----------: | -----------: | ---------: | --------------------: | -----------: | -------: | -----------: |
+| **Buy & Hold**                               |    **1.068** |       87.88% |     14.81% |                13.82% |      -18.92% |   54.56% |        0.782 |
+| Equal Weight                                 |        1.026 |       82.80% |     14.12% |                13.80% |      -19.92% |   53.69% |        0.709 |
+| **XGBoost (Top-5, Equal Weight)**            |    **0.836** |  **100.55%** | **16.46%** |                20.81% |      -20.32% |   53.43% |        0.810 |
+| LSTM                                         |        0.759 |       90.73% |     15.18% |                21.72% |      -20.31% |   51.00% |        0.748 |
+| Random Forest                                |        0.734 |       83.50% |     14.21% |                21.16% |      -20.85% |   52.56% |        0.682 |
+| Linear Regression                            |        0.714 |       82.42% |     14.07% |                21.70% |      -21.21% |   53.00% |        0.663 |
+| Proposed Strategy (Top-5, Volatility Weight) |        0.488 |       41.86% |      7.96% |                19.63% |      -26.14% |   53.61% |        0.304 |
 
-**Kết luận:** Mục tiêu Sharpe Ratio ≥ 1.8 đặt ra ban đầu **không đạt được** bằng phương pháp trung thực. Chiến lược tốt nhất là Buy & Hold thụ động — kết quả này phù hợp với lý thuyết thị trường hiệu quả dạng yếu, khi dữ liệu đầu vào chỉ giới hạn ở giá và khối lượng giao dịch công khai. Đáng chú ý, XGBoost (Top-5, Equal Weight) đạt Total Return cao nhất trong toàn bộ thử nghiệm (100.55%) và Sharpe Ratio cao nhất trong nhóm mô hình ML/DL, nhưng vẫn chưa vượt qua benchmark thụ động về hiệu suất điều chỉnh rủi ro.
+### Kết luận
+
+Mục tiêu Sharpe Ratio ≥ 1.8 đặt ra ban đầu **không đạt được** trên tập Test. Kết quả được giữ nguyên nhằm đảm bảo tính trung thực của thực nghiệm, thay vì tiếp tục tối ưu trên Test set chỉ để đạt ngưỡng mục tiêu.
+
+Buy & Hold đạt Sharpe Ratio cao nhất với **1.068**. Trong nhóm mô hình ML/DL, XGBoost đạt Sharpe Ratio cao nhất với **0.836**, trong khi LSTM đạt Total Return cao nhất với **90.73%**.
+
+Đáng chú ý, XGBoost (Top-5, Equal Weight) đạt Total Return cao nhất trong toàn bộ thử nghiệm với **100.55%**, nhưng vẫn có Sharpe Ratio thấp hơn benchmark Buy & Hold.
+
+Kết quả cho thấy mô hình dự báo tốt hơn ở Prediction Layer không nhất thiết tạo ra chiến lược có hiệu quả điều chỉnh theo rủi ro tốt hơn ở Portfolio Layer.
 
 ### Phát hiện quan trọng nhất: Backtest / Validation Overfitting
 
-Proposed Strategy (XGBoost, Top-5, Volatility Weight) đạt Sharpe cao trên tập Validation trong quá trình lựa chọn thiết kế — nhưng khi áp dụng đúng một lần lên Test, Sharpe sụt xuống còn **0.488**. Đây là bằng chứng thực nghiệm rõ ràng rằng chiến lược đã "học" quá khớp đặc thù biến động thị trường của giai đoạn 2018–2021 (bao gồm COVID-19), không tổng quát hóa tốt sang giai đoạn 2022–2026 (chu kỳ tăng lãi suất). Chi tiết phân tích xem báo cáo, Chương 5.
+Proposed Strategy (Top-5, Volatility Weight) đạt Sharpe Ratio **1.130 trên tập Validation** trong quá trình lựa chọn thiết kế. Tuy nhiên, khi pipeline được khóa và áp dụng đúng một lần trên tập Test, Sharpe Ratio giảm xuống còn **0.488**.
 
-### Ablation Study
+Total Return của Proposed Strategy trên Test đạt **41.86%**, CAGR đạt **7.96%** và Maximum Drawdown đạt **-26.14%**.
 
-| Thí nghiệm | Số đặc trưng | IC | Sharpe |
-|---|---|---|---|
-| A: Price/Return only | 5 | 0.0134 | 0.584 |
-| B: A + Technical Indicators | 15 | 0.0145 | 0.714 |
-| C: B + Volume (full) | 17 | 0.0135 | 0.777 |
+Sự suy giảm đáng kể giữa Validation và Test cho thấy hiệu suất cao trên Validation không đảm bảo khả năng tổng quát hóa sang dữ liệu chưa quan sát. Đây là dấu hiệu cần lưu ý về nguy cơ Validation/Backtest Overfitting và sự thay đổi điều kiện thị trường giữa các giai đoạn.
 
-Technical Indicators đóng góp mạnh nhất vào hiệu suất; Volume features đóng góp nhẹ hơn nhưng vẫn tích cực.
+## Ablation Study
+
+| Thí nghiệm                  | Số đặc trưng |     IC | Sharpe |
+| --------------------------- | -----------: | -----: | -----: |
+| A: Price/Return only        |            5 | 0.0134 |  0.584 |
+| B: A + Technical Indicators |           15 | 0.0145 |  0.714 |
+| C: B + Volume (full)        |           17 | 0.0135 |  0.777 |
+
+Technical Indicators đóng góp đáng kể vào hiệu suất dự báo và danh mục trong các cấu hình được thử nghiệm. Tuy nhiên, kết quả Ablation Study cần được diễn giải thận trọng do đây là một phần của quá trình đánh giá và cần tránh sử dụng Test set để tiếp tục tối ưu pipeline.
 
 ## Hạn chế phương pháp luận đã tự phát hiện qua Audit
 
-Sau khi hoàn thành pipeline, nhóm nghiên cứu tự thực hiện một vòng audit độc lập và phát hiện các hạn chế sau (đã ghi rõ trong báo cáo, không che giấu):
+Sau khi hoàn thành pipeline, nhóm nghiên cứu tự thực hiện một vòng audit độc lập và phát hiện các hạn chế sau:
 
-1. **Execution timing bias:** backtest hiện tại dùng giá đóng cửa của cùng ngày T để vừa tính tín hiệu vừa thực hiện giao dịch (same-bar execution), trong khi về lý thuyết cần thực hiện tại T+1. Bias này ảnh hưởng đồng đều lên mọi chiến lược nên không làm sai lệch so sánh tương đối, nhưng có thể khiến Sharpe tuyệt đối được ước lượng lạc quan hơn thực tế.
-2. **Test set reuse ở Ablation Study:** Ablation Study được đánh giá trên tập Test (đã dùng một lần cho kết quả chính), thay vì Validation.
-3. **Soft test contamination:** kết quả Test của 4 mô hình đã được quan sát trước khi chính thức chọn mô hình nền cho Proposed Strategy.
+1. **Execution timing bias:** backtest hiện tại dùng giá đóng cửa của cùng ngày T để vừa tính tín hiệu vừa thực hiện giao dịch (same-bar execution), trong khi về lý thuyết cần thực hiện tại T+1. Bias này có thể khiến các chỉ số hiệu quả tuyệt đối, bao gồm Sharpe Ratio, được ước lượng lạc quan hơn thực tế.
+
+2. **Test set reuse ở Ablation Study:** Ablation Study được đánh giá trên tập Test thay vì Validation. Do đó, kết quả Ablation Study không nên được sử dụng để tiếp tục tối ưu mô hình hoặc chiến lược dựa trên Test set.
+
+3. **Soft test contamination:** kết quả Test của 4 mô hình đã được quan sát trước khi chính thức chọn mô hình nền cho Proposed Strategy. Đây là một hạn chế về quy trình phát triển cần được ghi nhận để đảm bảo cách diễn giải kết quả Test phù hợp.
 
 Đây là các hướng cải thiện ưu tiên hàng đầu nếu đồ án được phát triển tiếp.
 
 ## Ứng dụng minh họa (Streamlit Dashboard)
 
-4 trang: **Market Overview** (biểu đồ giá) · **AI Stock Prediction** (dự báo + xếp hạng) · **Recommended Portfolio** (Top-K tùy chỉnh + phân bổ trọng số) · **Backtest** (so sánh 7 chiến lược + Ablation Study).
+4 trang:
+
+* **Market Overview** — biểu đồ giá và lựa chọn dữ liệu đầu vào.
+* **AI Stock Prediction** — dự báo lợi suất và xếp hạng cổ phiếu.
+* **Recommended Portfolio** — lựa chọn Top-K và phân bổ trọng số.
+* **Backtest** — so sánh hiệu quả các chiến lược và hiển thị kết quả Ablation Study.
 
 ### Chạy ứng dụng
 
 ```bash
-git clone https://github.com/<your-username>/ml-portfolio-project.git
+git clone https://github.com/xuanphu1984hn-dot/ml-portfolio-project
 cd ml-portfolio-project
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Ứng dụng sẽ mở tại `http://localhost:8501`.
+Ứng dụng sẽ mở tại:
+
+```text
+http://localhost:8501
+```
 
 ## Công nghệ sử dụng
 
@@ -151,14 +176,15 @@ Python · Pandas · NumPy · Scikit-learn · XGBoost · PyTorch (LSTM) · Plotly
 
 ## Giới hạn nghiên cứu
 
-- Chỉ sử dụng dữ liệu OHLCV công khai, không có alternative data (tin tức, sentiment, dữ liệu vĩ mô).
-- Backtest chưa tính chi phí giao dịch và trượt giá.
-- Phạm vi 25 cổ phiếu, nhỏ hơn chuẩn nghiên cứu thực tế.
+* Chỉ sử dụng dữ liệu OHLCV công khai, không có alternative data như tin tức, sentiment hoặc dữ liệu vĩ mô.
+* Backtest chưa tính chi phí giao dịch và trượt giá.
+* Phạm vi 25 cổ phiếu, nhỏ hơn quy mô thường thấy trong các nghiên cứu đầu tư thực tế.
+* Execution timing trong backtest cần được cải thiện bằng cách tách biệt thời điểm hình thành tín hiệu và thời điểm thực hiện giao dịch.
+* Cần duy trì Test set độc lập và chỉ sử dụng Test cho đánh giá cuối cùng.
 
 ## Tài liệu tham khảo trong repo
 
-- `docs/BaoCao_DoAn.docx` — báo cáo đầy đủ, gồm cơ sở lý thuyết, phân tích chi tiết từng chương, và phần audit phương pháp luận.
-- `notebooks/` — notebook đầy đủ từ EDA đến Backtest, có thể chạy lại toàn bộ pipeline.
+* `notebooks/` — notebook đầy đủ từ EDA đến Backtest, có thể chạy lại toàn bộ pipeline.
 
 ## Giấy phép
 
